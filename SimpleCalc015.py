@@ -77,18 +77,17 @@ class TKGUI():
         self.resultVariable = 0.0
         self.entFlag = False
         self.logHistoryName = "historyLog"
-       
-        
+   
         
         # Create instance
         self.win = tk.Tk()
-
+           
         # Add a title
         self.win.title("Simple Calculator")
         
         # Initialize widgets
         self.createWidgets()
-        
+        self.inReg.focus()
     # ~~~ End class contruction / initializer ~~-----
     
     
@@ -112,7 +111,7 @@ class TKGUI():
         mBox.showwarning(title= "Ooops!!!", message="you need to enter value before selecting an operation")
         
     def underConstruction(self):
-        mBox.showwarning(title= "Men at Work!!", message="This function has note been implemented yet, \nsorrrrrrry - see next version :)")
+        mBox.showwarning(title= "Men at Work!!", message="This function has not been implemented yet, \nsorrrrrrry - see next version :)")
         
     # -- make history display dialog and print 
     def historyToDialog(self):
@@ -241,9 +240,14 @@ class TKGUI():
         self.action_equal = ttk.Button(self.operKeys, text="ENTER", command=lambda: ButtonActions.do_enterReg(self))
         self.action_equal.grid(column=5, row=0, padx=4, pady=6)
         
+        # bind <return/enter key to enter button
+        def areturn(event):
+            ButtonActions.do_enterReg(self)
+        self.win.bind("<Return>", areturn) 
+        
         #Populate function keys frame
         # Adding
-        self.action_xpowy = ttk.Button(self.functKeys, text=" x**y ", command=lambda: ButtonActions.do_blank(self))
+        self.action_xpowy = ttk.Button(self.functKeys, text=" x**y ", command=lambda: ButtonActions.do_xpowy(self))
         self.action_xpowy.grid(column=0, row=0, padx=4, pady=6)
 
         self.action_sqrt = ttk.Button(self.functKeys, text=" sqrt ", command=lambda: ButtonActions.do_sqrt(self))
@@ -267,11 +271,26 @@ class TKGUI():
         self.action_tan = ttk.Button(self.functKeys, text="tan", command=lambda: ButtonActions.do_blank(self))
         self.action_tan.grid(column=2, row=1, padx=4, pady=6)
         
-        self.action_log10 = ttk.Button(self.functKeys, text="log10", command=lambda: ButtonActions.do_blank(self))
+        self.action_log10 = ttk.Button(self.functKeys, text=" log10", command=lambda: ButtonActions.do_blank(self))
         self.action_log10.grid(column=3, row=1, padx=4, pady=6)
         
-        self.action_ln = ttk.Button(self.functKeys, text="ln", command=lambda: ButtonActions.do_blank(self))
+        self.action_ln = ttk.Button(self.functKeys, text=" ln ", command=lambda: ButtonActions.do_blank(self))
         self.action_ln.grid(column=4, row=1, padx=4, pady=6)
+        
+        self.action_pi = ttk.Button(self.functKeys, text=" pi ", command=lambda: ButtonActions.do_blank(self))
+        self.action_pi.grid(column=0, row=2, padx=4, pady=6)
+        
+        self.action_e = ttk.Button(self.functKeys, text=" e ", command=lambda: ButtonActions.do_blank(self))
+        self.action_e.grid(column=1, row=2, padx=4, pady=6)
+        
+        self.action_phi = ttk.Button(self.functKeys, text="phi", command=lambda: ButtonActions.do_blank(self))
+        self.action_phi.grid(column=2, row=2, padx=4, pady=6)
+        
+        self.action_deg=rad = ttk.Button(self.functKeys, text="deg<>rad", command=lambda: ButtonActions.do_blank(self))
+        self.action_deg=rad.grid(column=3, row=2, padx=4, pady=6)
+        
+        self.action_unasgn = ttk.Button(self.functKeys, text="unasgn", command=lambda: ButtonActions.do_blank(self))
+        self.action_unasgn.grid(column=4, row=2, padx=4, pady=6)
         
         # Creating a container frame to hold tab2 graphing widgets ============================
 #===============================================================================
@@ -616,10 +635,28 @@ class ButtonActions():
         self.history.insert(tk.END, 'ENTERED  ' + str(self.currentVariable) + '\n')
         self.history.see(tk.END)
         self.entFlag = True
+        self.inReg.focus()
         print('current Register: ' + self.currentRegisterStr)
         print('current Variable: ' + str(self.currentVariable))
         print("Entered current register into current variable and clear current register")
         print('Operand 2 Variable: ' + str(self.operandTwo))
+        
+    def do_xpowy(self):
+        # check for entered button
+        if not self.entFlag:
+            self.arithmeticError()
+            return
+        self.resultVariable = (self.operandTwo)**(self.currentVariable)
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.resultVariable))
+        self.history.insert(tk.END, 'x^y  ' + str(self.resultVariable) + '\n')
+        self.history.see(tk.END)
+        # set up for chain operation
+        ButtonActions.do_enterReg(self)
+
+        # do something else to (x)
+        print('x^y')
+        print("y power of x is {}".format(self.resultVariable))
         
     def do_sqrt(self):
         # check for entered button
