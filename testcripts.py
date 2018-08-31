@@ -1,3 +1,5 @@
+from math import *
+
 #===============================================================================
 # from tkinter import *
 # 
@@ -32,25 +34,30 @@
 # root.mainloop()
 #===============================================================================
 
-from tkinter import *
+#===============================================================================
+# from tkinter import *
+# 
+# root = Tk()
+# 
+# def areturn(event):
+#     print("\r")
+# 
+# def key(event):
+#     print("pressed", repr(event.char))
+#     #print("That's it!!!!!!")
+# 
+# def callbck(event):
+#     frame.focus_set()
+#     print("clicked at", event.x, event.y)
+# 
+# frame = Frame(root, width=100, height=100)
+# frame.bind("<Key>", key)
+# frame.bind("<Return>", areturn)
+# frame.bind("<Button-1>", callbck)
+# frame.pack()
+# 
+# root.mainloop()
+#===============================================================================
 
-root = Tk()
-
-def areturn(event):
-    print("\r")
-
-def key(event):
-    print("pressed", repr(event.char))
-    #print("That's it!!!!!!")
-
-def callbck(event):
-    frame.focus_set()
-    print("clicked at", event.x, event.y)
-
-frame = Frame(root, width=100, height=100)
-frame.bind("<Key>", key)
-frame.bind("<Return>", areturn)
-frame.bind("<Button-1>", callbck)
-frame.pack()
-
-root.mainloop()
+print(pi)
+print(exp(0))

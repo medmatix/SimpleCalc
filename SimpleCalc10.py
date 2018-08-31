@@ -4,7 +4,7 @@
 SimpleCalc, Main Program Module
 
 Created on Aug 28, 2018
-@version: 0.1
+@version: 1.0
 @author: David A York
 @ copyright: 2018
 @note: Single file program and classes
@@ -24,6 +24,7 @@ from tkinter import Menu
 # from tkinter import Canvas
 from tkinter import messagebox as mBox
 import math
+from math import sqrt
 # module imports
 
 
@@ -262,35 +263,40 @@ class TKGUI():
         self.action_sgn = ttk.Button(self.functKeys, text="+/-", command=lambda: ButtonActions.do_sgn(self))
         self.action_sgn.grid(column=4, row=0, padx=4, pady=6)
         
-        self.action_cos = ttk.Button(self.functKeys, text="cos", command=lambda: ButtonActions.do_blank(self))
+        self.action_cos = ttk.Button(self.functKeys, text="cos", command=lambda: ButtonActions.do_cos(self))
         self.action_cos.grid(column=0, row=1, padx=4, pady=6)
         
-        self.action_sin = ttk.Button(self.functKeys, text="sin", command=lambda: ButtonActions.do_blank(self))
+        self.action_sin = ttk.Button(self.functKeys, text="sin", command=lambda: ButtonActions.do_sin(self))
         self.action_sin.grid(column=1, row=1, padx=4, pady=6)
         
-        self.action_tan = ttk.Button(self.functKeys, text="tan", command=lambda: ButtonActions.do_blank(self))
+        self.action_tan = ttk.Button(self.functKeys, text="tan", command=lambda: ButtonActions.do_tan(self))
         self.action_tan.grid(column=2, row=1, padx=4, pady=6)
         
-        self.action_log10 = ttk.Button(self.functKeys, text=" log10", command=lambda: ButtonActions.do_blank(self))
+        self.action_log10 = ttk.Button(self.functKeys, text=" log10", command=lambda: ButtonActions.do_log10(self))
         self.action_log10.grid(column=3, row=1, padx=4, pady=6)
         
-        self.action_ln = ttk.Button(self.functKeys, text=" ln ", command=lambda: ButtonActions.do_blank(self))
+        self.action_ln = ttk.Button(self.functKeys, text=" ln ", command=lambda: ButtonActions.do_ln(self))
         self.action_ln.grid(column=4, row=1, padx=4, pady=6)
         
-        self.action_pi = ttk.Button(self.functKeys, text=" pi ", command=lambda: ButtonActions.do_blank(self))
-        self.action_pi.grid(column=0, row=2, padx=4, pady=6)
+        self.action_exp = ttk.Button(self.functKeys, text="exp(x)", command=lambda: ButtonActions.do_exp(self))
+        self.action_exp.grid(column=0, row=2, padx=4, pady=6)
         
-        self.action_e = ttk.Button(self.functKeys, text=" e ", command=lambda: ButtonActions.do_blank(self))
-        self.action_e.grid(column=1, row=2, padx=4, pady=6)
+        self.action_pi = ttk.Button(self.functKeys, text=" pi ", command=lambda: ButtonActions.get_pi(self))
+        self.action_pi.grid(column=1, row=2, padx=4, pady=6)
         
-        self.action_phi = ttk.Button(self.functKeys, text="phi", command=lambda: ButtonActions.do_blank(self))
-        self.action_phi.grid(column=2, row=2, padx=4, pady=6)
+        self.action_e = ttk.Button(self.functKeys, text=" e ", command=lambda: ButtonActions.get_e(self))
+        self.action_e.grid(column=2, row=2, padx=4, pady=6)
+        
+        self.action_phi = ttk.Button(self.functKeys, text="phi", command=lambda: ButtonActions.get_phi(self))
+        self.action_phi.grid(column=3, row=2, padx=4, pady=6)
         
         self.action_deg=rad = ttk.Button(self.functKeys, text="deg<>rad", command=lambda: ButtonActions.do_blank(self))
-        self.action_deg=rad.grid(column=3, row=2, padx=4, pady=6)
+        self.action_deg=rad.grid(column=4, row=2, padx=4, pady=6)
         
-        self.action_unasgn = ttk.Button(self.functKeys, text="unasgn", command=lambda: ButtonActions.do_blank(self))
-        self.action_unasgn.grid(column=4, row=2, padx=4, pady=6)
+        #=======================================================================
+        # self.action_unasgn = ttk.Button(self.functKeys, text="unasgn", command=lambda: ButtonActions.do_blank(self))
+        # self.action_unasgn.grid(column=4, row=2, padx=4, pady=6)
+        #=======================================================================
         
         # Creating a container frame to hold tab2 graphing widgets ============================
 #===============================================================================
@@ -741,7 +747,180 @@ class ButtonActions():
         self.history.see(tk.END)
         print("sign changed, x is now {}".format(self.currentVariable))
         print('change of sign')
+    
+    def do_cos(self):
+        # check for entered button
+        if not self.entFlag:
+            self.arithmeticError()
+            return
+        # calculate cos(x) (x in radians!!!
+        self.resultVariable = math.cos(self.currentVariable)
+                # log action to history 
         
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.resultVariable))
+        self.history.insert(tk.END, 'COS ' + str(self.resultVariable) + '\n')
+        self.history.see(tk.END)
+        # set up for chain operation
+        ButtonActions.do_enterReg(self)
+
+        print("cosine of x is {}".format(self.resultVariable))
+        print('cosine')
+        
+    def do_sin(self):
+        # check for entered button
+        if not self.entFlag:
+            self.arithmeticError()
+            return
+        # calculate sqrt(x)
+        self.resultVariable = math.sin(self.currentVariable)
+                # log action to history 
+        
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.resultVariable))
+        self.history.insert(tk.END, 'SIN ' + str(self.resultVariable) + '\n')
+        self.history.see(tk.END)
+        # set up for chain operation
+        ButtonActions.do_enterReg(self)
+
+        print(" sine of x is {}".format(self.resultVariable))
+        print('sine')
+        
+    def do_tan(self):
+        # check for entered button
+        if not self.entFlag:
+            self.arithmeticError()
+            return
+        # calculate tangent(x)
+        self.resultVariable = math.tan(self.currentVariable)
+                # log action to history 
+        
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.resultVariable))
+        self.history.insert(tk.END, 'TAN  ' + str(self.resultVariable) + '\n')
+        self.history.see(tk.END)
+        # set up for chain operation
+        ButtonActions.do_enterReg(self)
+
+        print("tangent of x is {}".format(self.resultVariable))
+        print('tangent')
+        
+    def do_log10(self):
+        # check for entered button
+        if not self.entFlag:
+            self.arithmeticError()
+            return
+        # calculate base 10 log(x)
+        self.resultVariable = math.log10(self.currentVariable)
+                # log action to history 
+        
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.resultVariable))
+        self.history.insert(tk.END, 'LOG10  ' + str(self.resultVariable) + '\n')
+        self.history.see(tk.END)
+        # set up for chain operation
+        ButtonActions.do_enterReg(self)
+
+        print("log10 of x is {}".format(self.resultVariable))
+        print('LOG')
+        
+    def do_ln(self):
+        # check for entered button
+        if not self.entFlag:
+            self.arithmeticError()
+            return
+        # calculate natural log(x)
+        self.resultVariable = math.log(self.currentVariable)
+                # log action to history 
+        
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.resultVariable))
+        self.history.insert(tk.END, 'LN  ' + str(self.resultVariable) + '\n')
+        self.history.see(tk.END)
+        # set up for chain operation
+        ButtonActions.do_enterReg(self)
+
+        print("ln of x is {}".format(self.resultVariable))
+        print('ln')
+        
+    def get_pi(self):
+        # get constant pi
+        self.currentVariable = math.pi
+        # log action to history 
+        
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.currentVariable))
+        self.history.insert(tk.END, ' PI ' + str(self.currentVariable) + '\n')
+        self.history.see(tk.END)
+        self.entFlag = True
+        self.inReg.focus()
+        print("PI is {}".format(self.currentVariable))
+        print('pi ')
+        
+    def do_exp(self):
+        # check for entered button
+        if not self.entFlag:
+            self.arithmeticError()
+            return
+        # calculate exp(x)
+        self.resultVariable = math.exp(self.currentVariable)
+                # log action to history 
+        
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.resultVariable))
+        self.history.insert(tk.END, 'EXP  ' + str(self.resultVariable) + '\n')
+        self.history.see(tk.END)
+        # set up for chain operation
+        ButtonActions.do_enterReg(self)
+
+        print("exp of x is {}".format(self.resultVariable))
+        print('exp()')
+        
+    def get_e(self):
+        # get constant e
+        self.currentVariable = math.e
+        # log action to history 
+        
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.currentVariable))
+        self.history.insert(tk.END, ' e is ' + str(self.currentVariable) + '\n')
+        self.history.see(tk.END)
+        self.entFlag = True
+        self.inReg.focus()
+        print("e is {}".format(self.currentVariable))
+        print(' e ')
+        
+    def get_phi(self):
+        # calculate PHI - golden ratio
+        self.currentVariable = (1 + sqrt(5))/2
+        # log action to history 
+        
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.currentVariable))
+        self.history.insert(tk.END, ' PHI is ' + str(self.currentVariable) + '\n')
+        self.history.see(tk.END)
+        self.entFlag = True
+        self.inReg.focus()
+        print("golden ratio (PHI) is {}".format(self.currentVariable))
+        print(" phi ")
     def do_blank(self):
         # check for entered button
         if not self.entFlag:
