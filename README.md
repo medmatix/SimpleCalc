@@ -9,4 +9,4 @@ It is growing in functionality as new operations are added, increasingly from th
 
 I have tried to open my thinking process to view by including mind maps, doodles and UML models as I develop and grow this application.
 
-![OpeningShot](Calcshot.png)
+![OpeningShot](calcShot.png)
