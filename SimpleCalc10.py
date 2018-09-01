@@ -21,8 +21,13 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import scrolledtext
 from tkinter import Menu
-# from tkinter import Canvas
+from tkinter import Canvas
 from tkinter import messagebox as mBox
+
+from os import path, makedirs
+import time
+from datetime import datetime
+
 import math
 from math import sqrt
 # module imports
@@ -117,11 +122,13 @@ class TKGUI():
     # -- make history display dialog and print 
     def historyToDialog(self):
         mBox._show(title="History", message=self.history.get(1.0, tk.END), _icon="", _type="")
-         
+    
+    def notesToDialog(self):
+        mBox._show(title="Notes", message=self.scr_notes.get(1.0, tk.END), _icon="", _type="")
+        
         
     # == GUI widget constructiom ==============================================
-    def createWidgets(self):
-        
+    def createWidgets(self):        
         
         # Tab Controls introduced here --------------------------------------
         tabControl = ttk.Notebook(self.win)     # Create Tab Control
@@ -134,9 +141,16 @@ class TKGUI():
         
         tab3 = ttk.Frame(tabControl)            # Add a third tab
         tabControl.add(tab3, text='Documentation')      # Make third tab visible
+        
+        tab4 = ttk.Frame(tabControl)            # Add a fourth tab
+        tabControl.add(tab4, text='Statistics')      # Make fourth tab visible
+        
+        tab5 = ttk.Frame(tabControl)            # Add a fifth tab
+        tabControl.add(tab5, text='Graphics')      # Make fourth tab visible
 
         tabControl.pack(expand=1, fill="both")  # Pack to make visible
         # ~ end ~ Tab Controls introduced here -----------------------------------------
+
 
         #  We are creating a container frame to tab1 widgets ============================
         self.display = ttk.LabelFrame(tab1, text=' Display Registers ')
@@ -222,7 +236,17 @@ class TKGUI():
         self.action0.grid(column=1, row=6, padx=4, pady=2)  
         
         self.actiondec = ttk.Button(self.inKeys, text=" . ", command=lambda: ButtonActions.append_dec(self))
-        self.actiondec.grid(column=2, row=6, padx=4, pady=2)  
+        self.actiondec.grid(column=2, row=6, padx=4, pady=2)
+        
+        self.action_pi = ttk.Button(self.inKeys, text=" pi ", command=lambda: ButtonActions.get_pi(self))
+        self.action_pi.grid(column=0, row=7, padx=4, pady=2)
+        
+        self.action_e = ttk.Button(self.inKeys, text=" e ", command=lambda: ButtonActions.get_e(self))
+        self.action_e.grid(column=1, row=7, padx=4, pady=2)
+        
+        self.action_phi = ttk.Button(self.inKeys, text="phi", command=lambda: ButtonActions.get_phi(self))
+        self.action_phi.grid(column=2, row=7, padx=4, pady=2)
+        
         
         #Populate operator keys frame
         # Adding
@@ -241,10 +265,16 @@ class TKGUI():
         self.action_equal = ttk.Button(self.operKeys, text="ENTER", command=lambda: ButtonActions.do_enterReg(self))
         self.action_equal.grid(column=5, row=0, padx=4, pady=6)
         
-        # bind <return/enter key to enter button
-        def areturn(event):
-            ButtonActions.do_enterReg(self)
-        self.win.bind("<Return>", areturn) 
+        #=======================================================================
+        # # bind <return/enter key to enter button
+        # def areturntab1(event):
+        #     ButtonActions.do_enterReg(self)
+        #     self.inReg.bind("<Return>", areturntab1)
+        # 
+        # def areturntab2(event):
+        #     ButtonActions.do_enterReg(self)
+        #     self.tab2.bind("<Return>", areturntab2) 
+        #=======================================================================
         
         #Populate function keys frame
         # Adding
@@ -272,42 +302,32 @@ class TKGUI():
         self.action_tan = ttk.Button(self.functKeys, text="tan", command=lambda: ButtonActions.do_tan(self))
         self.action_tan.grid(column=2, row=1, padx=4, pady=6)
         
+        self.action_acos = ttk.Button(self.functKeys, text="acos", command=lambda: ButtonActions.do_blank(self))
+        self.action_acos.grid(column=3, row=1, padx=4, pady=6)
+        
+        self.action_asin = ttk.Button(self.functKeys, text="asin", command=lambda: ButtonActions.do_blank(self))
+        self.action_asin.grid(column=4, row=1, padx=4, pady=6)
+        
+        self.action_atan = ttk.Button(self.functKeys, text="atan", command=lambda: ButtonActions.do_blank(self))
+        self.action_atan.grid(column=0, row=2, padx=4, pady=6)
+        
         self.action_log10 = ttk.Button(self.functKeys, text=" log10", command=lambda: ButtonActions.do_log10(self))
-        self.action_log10.grid(column=3, row=1, padx=4, pady=6)
+        self.action_log10.grid(column=1, row=2, padx=4, pady=6)
         
         self.action_ln = ttk.Button(self.functKeys, text=" ln ", command=lambda: ButtonActions.do_ln(self))
-        self.action_ln.grid(column=4, row=1, padx=4, pady=6)
+        self.action_ln.grid(column=2, row=2, padx=4, pady=6)
         
         self.action_exp = ttk.Button(self.functKeys, text="exp(x)", command=lambda: ButtonActions.do_exp(self))
-        self.action_exp.grid(column=0, row=2, padx=4, pady=6)
+        self.action_exp.grid(column=3, row=2, padx=4, pady=6)
         
-        self.action_pi = ttk.Button(self.functKeys, text=" pi ", command=lambda: ButtonActions.get_pi(self))
-        self.action_pi.grid(column=1, row=2, padx=4, pady=6)
-        
-        self.action_e = ttk.Button(self.functKeys, text=" e ", command=lambda: ButtonActions.get_e(self))
-        self.action_e.grid(column=2, row=2, padx=4, pady=6)
-        
-        self.action_phi = ttk.Button(self.functKeys, text="phi", command=lambda: ButtonActions.get_phi(self))
-        self.action_phi.grid(column=3, row=2, padx=4, pady=6)
-        
-        self.action_deg=rad = ttk.Button(self.functKeys, text="deg<>rad", command=lambda: ButtonActions.do_blank(self))
-        self.action_deg=rad.grid(column=4, row=2, padx=4, pady=6)
+        self.action_deg2rad = ttk.Button(self.functKeys, text="deg>rad", command=lambda: ButtonActions.do_deg2rad(self))
+        self.action_deg2rad.grid(column=4, row=2, padx=4, pady=6)
         
         #=======================================================================
         # self.action_unasgn = ttk.Button(self.functKeys, text="unasgn", command=lambda: ButtonActions.do_blank(self))
         # self.action_unasgn.grid(column=4, row=2, padx=4, pady=6)
         #=======================================================================
         
-        # Creating a container frame to hold tab2 graphing widgets ============================
-#===============================================================================
-#         self.graphical = ttk.LabelFrame(tab2, text=' Graphical Output ')
-#         self.graphical.grid(column=0, row=0, padx=8, pady=4)
-# 
-#         # Adding a graphic window (canvas widget
-#         w = Canvas(self.graphical, width=400, height=300)
-#         w.grid(column=0, row=1, padx=8, pady=4, sticky='W')
-#===============================================================================
-
 
         
         # We are creating a container frame to hold tab2 widgets ============================
@@ -316,20 +336,24 @@ class TKGUI():
         
         self.notesctl = ttk.LabelFrame(self.notes)
         self.notesctl.grid(column=0, row=0, padx=8, pady=4, sticky='W')
-        self.action_clrnotes = ttk.Button(self.notesctl, text="CLEAR", command=lambda: ButtonActions.do_note(self))
+        
+        scrolW1  = 50; scrolH1  =  20
+        self.scr_notes = scrolledtext.ScrolledText(self.notes, width=scrolW1, height=scrolH1, wrap=tk.WORD)
+        self.scr_notes.grid(column=0, row=6, padx=4, pady=4, sticky='WE', columnspan=3)
+        
+        self.action_clrnotes = ttk.Button(self.notesctl, text="CLEAR", command=lambda: ButtonActions.do_clr_notes(self, self.scr_notes))
         self.action_clrnotes.grid(column=0, row=0, padx=4, pady=6)
-        self.action_prtnotes = ttk.Button(self.notesctl, text="PRINT", command=lambda: ButtonActions.do_note(self))
+        
+        self.action_prtnotes = ttk.Button(self.notesctl, text="PRINT", command=lambda: ButtonActions.do_prt_notes(self, self.scr_notes))
         self.action_prtnotes.grid(column=1, row=0, padx=4, pady=6)
-        self.action_lognotes = ttk.Button(self.notesctl, text="LOG IT", command=lambda: ButtonActions.do_note(self))
+        
+        self.action_lognotes = ttk.Button(self.notesctl, text="LOG IT", command=lambda: ButtonActions.do_log_notes(self))
         self.action_lognotes.grid(column=2, row=0, padx=4, pady=6)
-        self.action_savenotes = ttk.Button(self.notesctl, text="SAVE", command=lambda: ButtonActions.do_note(self))
+        self.action_savenotes = ttk.Button(self.notesctl, text="SAVE", command=lambda: ButtonActions.do_save_notes(self))
         self.action_savenotes.grid(column=3, row=0, padx=4, pady=6)
         self.action_menunotes = ttk.Button(self.notesctl, text="MENU", command=lambda: ButtonActions.do_note(self))
         self.action_menunotes.grid(column=4, row=0, padx=4, pady=6)
         
-        scrolW1  = 50; scrolH1  =  20
-        self.notes = scrolledtext.ScrolledText(self.notes, width=scrolW1, height=scrolH1, wrap=tk.WORD)
-        self.notes.grid(column=0, row=6, padx=4, pady=4, sticky='WE', columnspan=3)
         
         
         
@@ -337,25 +361,40 @@ class TKGUI():
         self.documentation = ttk.LabelFrame(tab3, text=' The Manual ')
         self.documentation.grid(column=0, row=3, padx=8, pady=4, sticky='W')
         
-
-        
         # the index of the manual
-        ttk.Label(self.documentation, text="Manual Index:").grid(column=0, row=0)
-        choice = tk.StringVar()
-        indexChosen = ttk.Combobox(self.documentation, width=65, textvariable=choice)
-        indexChosen['values'] = ('Introduction', 'Overview', 'Functions', 'References', 'Further Explorations')
-        indexChosen.grid(column=0, row=1)
-        indexChosen.current(0)
+        ttk.Label(self.documentation, text="Manual Sections:").grid(column=0, row=0)
+        self.choice = tk.StringVar()
+        self.indexChosen = ttk.Combobox(self.documentation, width=65, textvariable=self.choice)
+        self.indexChosen['values'] = ('All', 'Overview', 'Introduction', 'Operations', 'Functions', 'References', 'Further Explorations')
+        self.indexChosen.current(0)
+        self.indexChosen.grid(column=0, row=1)
         
         # The Manual text                
         # Scrolling Documentation field:
         # Creating a Label
         ttk.Label(self.documentation, text="Documentation:").grid(column=0, row=5, sticky='W')
         
-        # Using a scrolled Text control for review of action history
-        scrolW1  = 50; scrolH1  =  20
+        # Using a scrolled Text control for review of documentation
+        scrolW1  = 50; scrolH1  =  30
         self.manual = scrolledtext.ScrolledText(self.documentation, width=scrolW1, height=scrolH1, wrap=tk.WORD)
         self.manual.grid(column=0, row=6, padx=4, pady=4, sticky='WE', columnspan=3)
+        section = "./documentation/all_docs.txt"
+        docFile=open(section, 'r')
+        self.manual.insert(tk.INSERT, '\n' + docFile.read())
+        
+        # We are creating a container frame to hold tab4 widgets
+        self.statistics = ttk.LabelFrame(tab4, text=' A Statistical Applications Interface ')
+        self.statistics.grid(column=0, row=3, padx=8, pady=4, sticky='W')
+        ttk.Label(self.statistics, text="Statistics:  this application functionality has not yet been implemented ........        ").grid(column=0, row=5, sticky='W')
+        
+        # Creating a container frame to hold tab5 graphing widgets ============================
+        self.graphical = ttk.LabelFrame(tab5, text=' Graphical Output ')
+        self.graphical.grid(column=0, row=0, padx=8, pady=4)
+ 
+        # Adding a graphic window (canvas widget)
+        gw = Canvas(self.graphical, width=415, height=550)
+        gw.create_text(60,10, text="Not yet implemented")
+        gw.grid(column=0, row=1, padx=8, pady=4, sticky='W')
         
         
         # Creating a Menu Bar ---------------------------------------------------------------------
@@ -921,6 +960,28 @@ class ButtonActions():
         self.inReg.focus()
         print("golden ratio (PHI) is {}".format(self.currentVariable))
         print(" phi ")
+        
+    def do_deg2rad(self):
+        # check for entered button
+        if not self.entFlag:
+            self.arithmeticError()
+            return
+        # convert degrees in x to radians (x)
+        self.resultVariable = math.radians(self.currentVariable)
+                # log action to history 
+        
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.resultVariable))
+        self.history.insert(tk.END, 'DEG2RAD  ' + str(self.resultVariable) + '\n')
+        self.history.see(tk.END)
+        # set up for chain operation
+        ButtonActions.do_enterReg(self)
+
+        print("Deg to Radians of x is {}".format(self.resultVariable))
+        print('DEG2RAD')
+    
     def do_blank(self):
         # check for entered button
         if not self.entFlag:
@@ -936,8 +997,36 @@ class ButtonActions():
         # do something else to (x)
         self.underConstruction()
         print('note function')
+    
+    def do_clr_notes(self, scr_notes):
+        # clear the calculation history
+        scr_notes.delete(1.0,tk.END)
+        #self.history.insert(tk.END, 'CLEAR HISTORY\n')
+        scr_notes.see(tk.END)
+        print('cleared the notes pad')
         
-
+    def do_prt_notes(self, scr_notes):
+        print("\n Notes:\n")
+        print(scr_notes.get(1.0, tk.END) + '\n')  # to Console
+        self.history.insert(tk.END, 'PRINT NOTES \n')
+        self.history.see(tk.END)
+        self.notesToDialog()  # and show in a dialog
+        
+    def do_log_notes(self):
+        self.history.insert(tk.END, self.scr_notes.get(1.0, tk.END) + '\n')
+        self.history.see(tk.END)
+        
+    def do_save_notes(self):
+        notesFile = 'CalcNotes' + '.note'
+        notesFolder = './Notes/'
+        if not path.exists(notesFolder):
+            makedirs(notesFolder, exist_ok = True)
+        openedFile = open(notesFolder + notesFile,"w")
+        openedFile.write(self.scr_notes.get(1.0, tk.END) + '\n')
+        openedFile.close()
+        self.history.insert(tk.END, 'SAVED NOTES \n')
+        self.history.see(tk.END)
+        print("save finished")
 #======================
 # Start GUI
 #======================
