@@ -1,14 +1,16 @@
 # SimpleCalc
 A Simple Calculator project in python
   
-A programming project in python to implement with tkinter a simple arithmetic calculator. This is mainly an exercise but free for all to review and use if found helpful.Enjoy.
+This is a programming project in python to implement, with tkinter, a simple mathematical calculator. This was undertaken by me mainly as an exercise learning Tkinter, I decided to make it available for all to review and use if found helpful. Constructive comments welcome. Enjoy.
 
-This is implemented with python 3.7 and is a work in progress. 
+This is implemented with python 3.7 and is truly a work in progress. There is much that is not 'pythonic' I'm sure.
 
-It is growing in functionality as new operations are added, increasingly from the numpy library. Plans are to add a function graphing capability via mathplotlib. I hope you follow allong and comment freely. Afterall, this is first and formost part of my learning experience.
+I have been growing in functionality as new operations are added. It will likely serve as a testbed as well for learning to programming from the numpy library. Plans are to implement a function graphing capability via mathplotlib as well a s some kind of (single variable) statistical calculator. I hope you follow a long and comment freely. After-all, this is first and foremost part of my learning experience.
 
-I have tried to open my thinking process to view by including mind maps, doodles and UML models as I develop and grow this application. The screenshot for Version 1.24 is below.
+I have tried to open my thinking processes to view by including mind maps, doodles and UML models as I develop and grow this application. 
 
-![OpeningShot](calcShot.png) ![OpeningShot](calcShot2.png)
-  
-![OpeningShot](calcShot3.png)
+The screenshot for Version 1.24 is below.
+
+![OpeningShot](calcShot.png) ![OpeningShot](calcShot2.png) ![OpeningShot](calcShot3.png)
+
+
