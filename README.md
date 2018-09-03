@@ -9,8 +9,6 @@ It is growing in functionality as new operations are added, increasingly from th
 
 I have tried to open my thinking process to view by including mind maps, doodles and UML models as I develop and grow this application. The screenshot for Version 1.24 is below.
 
-![OpeningShot](calcShot.png)
-  
-![OpeningShot](calcShot2.png)
+![OpeningShot](calcShot.png) ![OpeningShot](calcShot2.png)
   
 ![OpeningShot](calcShot3.png)
