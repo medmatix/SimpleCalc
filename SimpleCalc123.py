@@ -91,6 +91,9 @@ class TKGUI():
         # Add a title
         self.win.title("Simple Calculator")
         
+        # Add a icon
+        self.win.iconbitmap('Number_cruncherCr2.ico')
+        
         # Initialize widgets
         self.createWidgets()
         self.inReg.focus()
@@ -107,24 +110,27 @@ class TKGUI():
     
     # -- make an messages and messageBoxes for GUI help and errors
     def info(self):
-        mBox.showinfo('About Template', 'A Simple Arithmetic Calculator\n (c) David A York, 2018\n \nlicense: MIT/X-Windows')
+        mBox.showinfo('About SimpleCalc', 'A Simple Python RPN Calculator\n (c) David A York, 2018\n http:crunches-data.appspot.com \nVersion: 1.23, development version\nlicense: MIT/X-Windows')
 
     # catch trying to cast a blank to a number
     def castError(self):
-        mBox.showwarning(title= "Ooops!!!", message="the input field can't be blank, \nat least one number should be entered first\nREVERSE POLISH notation means: enter all numbers, THEN choose an operation.The result is always brought forward as follow-up input in case needed\nOperations can be chained by just entering next input.")
+        mBox.showwarning(title= "Ooops!!!", message="The Input field can't be blank or non-mumeric \na number should be entered first, then ENTER.\n\nREVERSE POLISH Notation (RPN) means: enter all numbers, THEN choose an operation.The result is always brought forward as follow-up input in case needed\nOperations can be chained by just entering next input.")
+    
+    def improperInputError(self):
+        mBox.showerror(title= "Ooops!!!", message="Improper Operand, did you try to take a log of a negative or to divide by zero, etc.")
     
     def arithmeticError(self):
-        mBox.showwarning(title= "Ooops!!!", message="you need to enter value before selecting an operation")
+        mBox.showerror(title= "Ooops!!!", message="you need to enter value before selecting an operation")
         
     def underConstruction(self):
-        mBox.showwarning(title= "Men at Work!!", message="This function has not been implemented yet, \nsorrrrrrry - see next version :)")
+        mBox.showinfo(title= "Men at Work!!", message="This function has not been implemented yet, \nsorrrrrrry - see next version :)")
         
     # -- make history display dialog and print 
     def historyToDialog(self):
         mBox._show(title="History", message=self.history.get(1.0, tk.END), _icon="", _type="")
     
     def notesToDialog(self):
-        mBox._show(title="Notes", message=self.scr_notes.get(1.0, tk.END), _icon="", _type="")
+        mBox._show(title="Notes", message=self.scr_notes.get(1.0, tk.END), _icon='', _type="")
         
         
     # == GUI widget constructiom ==============================================
@@ -142,11 +148,13 @@ class TKGUI():
         tab3 = ttk.Frame(tabControl)            # Add a third tab
         tabControl.add(tab3, text='Documentation')      # Make third tab visible
         
-        tab4 = ttk.Frame(tabControl)            # Add a fourth tab
-        tabControl.add(tab4, text='Statistics')      # Make fourth tab visible
-        
-        tab5 = ttk.Frame(tabControl)            # Add a fifth tab
-        tabControl.add(tab5, text='Graphics')      # Make fourth tab visible
+        #=======================================================================
+        # tab4 = ttk.Frame(tabControl)            # Add a fourth tab
+        # tabControl.add(tab4, text='Statistics')      # Make fourth tab visible
+        # 
+        # tab5 = ttk.Frame(tabControl)            # Add a fifth tab
+        # tabControl.add(tab5, text='Graphics')      # Make fourth tab visible
+        #=======================================================================
 
         tabControl.pack(expand=1, fill="both")  # Pack to make visible
         # ~ end ~ Tab Controls introduced here -----------------------------------------
@@ -170,7 +178,7 @@ class TKGUI():
         self.functKeys.grid(column=0, row=18, padx=8, pady=8)
         # Input field = current register
         # Creating a Label
-        ttk.Label(self.display, text="Current Operand:").grid(column=0, row=0, sticky='W')
+        ttk.Label(self.display, text="Input Field:").grid(column=0, row=0, sticky='W')
  
         # Adding a Textbox Entry widget
         self.inReg = ttk.Entry(self.display, width=68, text='Enter a number')
@@ -302,13 +310,13 @@ class TKGUI():
         self.action_tan = ttk.Button(self.functKeys, text="tan", command=lambda: ButtonActions.do_tan(self))
         self.action_tan.grid(column=2, row=1, padx=4, pady=6)
         
-        self.action_acos = ttk.Button(self.functKeys, text="acos", command=lambda: ButtonActions.do_blank(self))
+        self.action_acos = ttk.Button(self.functKeys, text="acos", command=lambda: ButtonActions.do_acos(self))
         self.action_acos.grid(column=3, row=1, padx=4, pady=6)
         
-        self.action_asin = ttk.Button(self.functKeys, text="asin", command=lambda: ButtonActions.do_blank(self))
+        self.action_asin = ttk.Button(self.functKeys, text="asin", command=lambda: ButtonActions.do_asin(self))
         self.action_asin.grid(column=4, row=1, padx=4, pady=6)
         
-        self.action_atan = ttk.Button(self.functKeys, text="atan", command=lambda: ButtonActions.do_blank(self))
+        self.action_atan = ttk.Button(self.functKeys, text="atan", command=lambda: ButtonActions.do_atan(self))
         self.action_atan.grid(column=0, row=2, padx=4, pady=6)
         
         self.action_log10 = ttk.Button(self.functKeys, text=" log10", command=lambda: ButtonActions.do_log10(self))
@@ -382,20 +390,25 @@ class TKGUI():
         docFile=open(section, 'r')
         self.manual.insert(tk.INSERT, '\n' + docFile.read())
         
-        # We are creating a container frame to hold tab4 widgets
-        self.statistics = ttk.LabelFrame(tab4, text=' A Statistical Applications Interface ')
-        self.statistics.grid(column=0, row=3, padx=8, pady=4, sticky='W')
-        ttk.Label(self.statistics, text="Statistics:  this application functionality has not yet been implemented ........        ").grid(column=0, row=5, sticky='W')
+        # Creating a container frame to hold tab4 widgets
+        #=======================================================================
+        # self.statistics = ttk.LabelFrame(tab4, text=' A Statistical Applications Interface ')
+        # self.statistics.grid(column=0, row=3, padx=8, pady=4, sticky='W')
+        # ttk.Label(self.statistics, text="Statistics:  this application functionality has not yet been implemented ........        ").grid(column=0, row=5, sticky='W')
+        #  
+        #=======================================================================
         
-        # Creating a container frame to hold tab5 graphing widgets ============================
-        self.graphical = ttk.LabelFrame(tab5, text=' Graphical Output ')
-        self.graphical.grid(column=0, row=0, padx=8, pady=4)
- 
-        # Adding a graphic window (canvas widget)
-        gw = Canvas(self.graphical, width=415, height=550)
-        gw.create_text(60,10, text="Not yet implemented")
-        gw.grid(column=0, row=1, padx=8, pady=4, sticky='W')
-        
+        # Creating a container frame to hold tab5 graphing widgets 
+        #=======================================================================
+        #       self.graphical = ttk.LabelFrame(tab5, text=' Graphical Output ')
+        #       self.graphical.grid(column=0, row=0, padx=8, pady=4)
+        # 
+        #       # Adding a graphic window (canvas widget)
+        #       gw = Canvas(self.graphical, width=415, height=550)
+        #       gw.create_text(60,10, text="Not yet implemented")
+        #       gw.grid(column=0, row=1, padx=8, pady=4, sticky='W')
+        #       
+        #=======================================================================
         
         # Creating a Menu Bar ---------------------------------------------------------------------
         menuBar = Menu(tab1)
@@ -653,10 +666,14 @@ class ButtonActions():
         if not self.entFlag:
             self.arithmeticError()
             return
-        # divide variables entered, second from first 
-        self.resultVariable = self.operandTwo / self.currentVariable
-        # log action to history 
+        # divide variables entered, second from first         
+        try:
+            self.resultVariable = self.operandTwo / self.currentVariable
+        except:
+            self.improperInputError()
+            return
         
+        # log action to history 
         self.history.see(tk.END)
         # clear register before transferring result there
         self.inReg.delete(0,tk.END)
@@ -850,15 +867,80 @@ class ButtonActions():
         print("tangent of x is {}".format(self.resultVariable))
         print('tangent')
         
+    def do_acos(self):
+        # check for entered button
+        if not self.entFlag:
+            self.arithmeticError()
+            return
+        # calculate cos(x) (x in radians!!!
+        self.resultVariable = math.acos(self.currentVariable)
+                # log action to history 
+        
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.resultVariable))
+        self.history.insert(tk.END, 'COS ' + str(self.resultVariable) + '\n')
+        self.history.see(tk.END)
+        # set up for chain operation
+        ButtonActions.do_enterReg(self)
+
+        print("cosine of x is {}".format(self.resultVariable))
+        print('cosine')
+        
+    def do_asin(self):
+        # check for entered button
+        if not self.entFlag:
+            self.arithmeticError()
+            return
+        # calculate sqrt(x)
+        self.resultVariable = math.asin(self.currentVariable)
+                # log action to history 
+        
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.resultVariable))
+        self.history.insert(tk.END, 'SIN ' + str(self.resultVariable) + '\n')
+        self.history.see(tk.END)
+        # set up for chain operation
+        ButtonActions.do_enterReg(self)
+
+        print(" sine of x is {}".format(self.resultVariable))
+        print('sine')
+        
+    def do_atan(self):
+        # check for entered button
+        if not self.entFlag:
+            self.arithmeticError()
+            return
+        # calculate tangent(x)
+        self.resultVariable = math.atan(self.currentVariable)
+                # log action to history 
+        
+        self.history.see(tk.END)
+        # clear register before transferring result there
+        self.inReg.delete(0,tk.END)
+        self.inReg.insert(tk.INSERT, str(self.resultVariable))
+        self.history.insert(tk.END, 'TAN  ' + str(self.resultVariable) + '\n')
+        self.history.see(tk.END)
+        # set up for chain operation
+        ButtonActions.do_enterReg(self)
+
+        print("tangent of x is {}".format(self.resultVariable))
+        print('tangent')
     def do_log10(self):
         # check for entered button
         if not self.entFlag:
             self.arithmeticError()
             return
         # calculate base 10 log(x)
-        self.resultVariable = math.log10(self.currentVariable)
-                # log action to history 
-        
+        try:
+            self.resultVariable = math.log10(self.currentVariable)
+        except:
+            self.improperInputError()
+            return
+        # log action to history 
         self.history.see(tk.END)
         # clear register before transferring result there
         self.inReg.delete(0,tk.END)
@@ -877,9 +959,13 @@ class ButtonActions():
             self.arithmeticError()
             return
         # calculate natural log(x)
-        self.resultVariable = math.log(self.currentVariable)
-                # log action to history 
+        try:
+            self.resultVariable = math.log(self.currentVariable)
+        except:
+            self.improperInputError()
+            return
         
+        # log action to history 
         self.history.see(tk.END)
         # clear register before transferring result there
         self.inReg.delete(0,tk.END)
