@@ -11,6 +11,6 @@ I have tried to open my thinking processes to view by including mind maps, doodl
 
 The screenshot for Version 1.24 is below.
 
-![OpeningShot](calcShot.png) ![OpeningShot](calcShot2.png) ![OpeningShot](calcShot3.png)
+![OpeningShot](calcShot.png) ![OpeningShot2](calcShot2.png) ![OpeningShot3](calcShot3.png)
 
 
